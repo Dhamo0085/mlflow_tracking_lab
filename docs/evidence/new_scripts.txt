@@ -1,0 +1,104 @@
+# New scripts, run from Mlflow_Labs/Lab1 with a fresh local MLflow store (mlflow 3.17.2, Python 3.12.14)
+
+$ python linear_regression.py
+Successfully registered model 'ElasticnetWineModel'.
+Created version '1' of model 'ElasticnetWineModel'.
+Elasticnet model (alpha=0.500000, l1_ratio=0.500000):
+  RMSE: 0.7931640229276851
+  MAE: 0.6271946374319587
+  R2: 0.10862644997792614
+  baseline RMSE (predict the mean): 0.8426394848604892
+
+$ python sweep.py
+Registered model 'ElasticnetWineModel' already exists. Creating a new version of this model...
+Created version '2' of model 'ElasticnetWineModel'.
+Elasticnet model (alpha=0.010000, l1_ratio=0.100000):
+  RMSE: 0.6741717721180907
+  MAE: 0.5165934106815653
+  R2: 0.3560163248615399
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.010000, l1_ratio=0.500000):
+  RMSE: 0.6778557583356976
+  MAE: 0.5190564939146215
+  R2: 0.3489590462840656
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.010000, l1_ratio=0.900000):
+  RMSE: 0.6803416279023321
+  MAE: 0.5214391892297825
+  R2: 0.3441752248849914
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.100000, l1_ratio=0.100000):
+  RMSE: 0.7128829045893678
+  MAE: 0.5462202174984665
+  R2: 0.2799376066653346
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.100000, l1_ratio=0.500000):
+  RMSE: 0.7308996187375898
+  MAE: 0.5615486628017713
+  R2: 0.2430813606733675
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.100000, l1_ratio=0.900000):
+  RMSE: 0.735314956888905
+  MAE: 0.566974647785579
+  R2: 0.23390870203034675
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.500000, l1_ratio=0.100000):
+  RMSE: 0.7460550348172178
+  MAE: 0.576381895873763
+  R2: 0.21136606570632288
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.500000, l1_ratio=0.500000):
+  RMSE: 0.7931640229276851
+  MAE: 0.6271946374319587
+  R2: 0.10862644997792614
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=0.500000, l1_ratio=0.900000):
+  RMSE: 0.8323747376136406
+  MAE: 0.6669171677143245
+  R2: 0.018316455219614114
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=1.000000, l1_ratio=0.100000):
+  RMSE: 0.7701600546996781
+  MAE: 0.6019137520705311
+  R2: 0.15958129736104143
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=1.000000, l1_ratio=0.500000):
+  RMSE: 0.8328241218819785
+  MAE: 0.6681571546815985
+  R2: 0.017256182227355144
+  baseline RMSE (predict the mean): 0.8426394848604892
+Elasticnet model (alpha=1.000000, l1_ratio=0.900000):
+  RMSE: 0.8328836770764706
+  MAE: 0.6717584996142676
+  R2: 0.017115625319085503
+  baseline RMSE (predict the mean): 0.8426394848604892
+
+Sweep results (best first):
+ alpha  l1_ratio     rmse      mae       r2
+  0.01       0.1 0.674172 0.516593 0.356016
+  0.01       0.5 0.677856 0.519056 0.348959
+  0.01       0.9 0.680342 0.521439 0.344175
+  0.10       0.1 0.712883 0.546220 0.279938
+  0.10       0.5 0.730900 0.561549 0.243081
+  0.10       0.9 0.735315 0.566975 0.233909
+  0.50       0.1 0.746055 0.576382 0.211366
+  1.00       0.1 0.770160 0.601914 0.159581
+  0.50       0.5 0.793164 0.627195 0.108626
+  0.50       0.9 0.832375 0.666917 0.018316
+  1.00       0.5 0.832824 0.668157 0.017256
+  1.00       0.9 0.832884 0.671758 0.017116
+
+Best: alpha=0.01, l1_ratio=0.1, RMSE=0.6742 (baseline RMSE 0.8426)
+Registered ElasticnetWineModel version 2 as @champion
+
+$ python predict.py data/sample_wines.csv
+   quality  predicted_quality
+0        7           5.925247
+1        5           5.088180
+2        6           5.763600
+3        7           6.408604
+4        6           5.443391
+5        5           5.424653
+6        6           5.853217
+7        7           6.221434
+RMSE vs the 'quality' column: 0.5795 (MAE 0.4872, R2 0.4490)

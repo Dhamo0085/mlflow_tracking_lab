@@ -1,0 +1,38 @@
+$ pytest --cov=Mlflow_Labs/Lab1 --cov-report=term-missing
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: ~/Downloads/MLOPs_LAB/mlflow_tracking_lab
+configfile: pytest.ini
+testpaths: Mlflow_Labs/Lab1/tests
+plugins: platformdirs-4.14.3, cov-7.1.0, anyio-4.16.0
+collected 52 items
+
+Mlflow_Labs/Lab1/tests/test_data_and_cli.py ...........................  [ 51%]
+Mlflow_Labs/Lab1/tests/test_sweep_and_predict.py ...........             [ 73%]
+Mlflow_Labs/Lab1/tests/test_tracking.py .............s                   [100%]
+
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.12.14-final-0 _______________
+
+Name                                    Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------
+Mlflow_Labs/Lab1/linear_regression.py     147      1    99%   256
+Mlflow_Labs/Lab1/predict.py                62      4    94%   37-38, 93, 101
+Mlflow_Labs/Lab1/serving.py                61     61     0%   6-123
+Mlflow_Labs/Lab1/sweep.py                  62      2    97%   101, 107
+---------------------------------------------------------------------
+TOTAL                                     332     68    80%
+=========================== short test summary info ============================
+SKIPPED [1] Mlflow_Labs/Lab1/tests/test_tracking.py:133: xgboost cannot be imported here: 
+XGBoost Library (libxgboost.dylib) could not be loaded.
+Likely causes:
+  * OpenMP runtime is not installed
+    - vcomp140.dll or libgomp-1.dll for Windows
+    - libomp.dylib for Mac OSX
+    - libgomp.so for Linux and other UNIX-like OSes
+    Mac OSX users: Run `brew install libomp` to install OpenMP runtime.
+
+  * You are running 32-bit Python on a 64-bit OS
+
+Error message(s): ["dlopen(.venv/lib/python3.12/site-packages/xgboost/lib/libxgboost.dylib, 0x0006): Library not loaded: @rpath/libomp.dylib\n  Referenced from: <09B43001-8527-34F6-AAE4-B97DA8A6CBC0> .venv/lib/python3.12/site-packages/xgboost/lib/libxgboost.dylib\n  Reason: tried: '/opt/homebrew/opt/libomp/lib/libomp.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/opt/homebrew/opt/libomp/lib/libomp.dylib' (no such file), '/opt/homebrew/opt/libomp/lib/libomp.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/opt/homebrew/opt/libomp/lib/libomp.dylib' (no such file), '~/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/libomp.dylib' (no such file), '~/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/libomp.dylib' (no such file)"]
+================== 51 passed, 1 skipped in 140.05s (0:02:20) ===================
