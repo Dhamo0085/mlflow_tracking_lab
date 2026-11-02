@@ -292,13 +292,13 @@ mlflow_tracking_lab/
 
 ## 8. Screenshots
 
-> Screenshots still need to be added to [`docs/screenshots/`](docs/screenshots). The images below will show up once the files are committed.
+> Taken on 2026-11-02 from the local MLflow UI (`mlflow ui --port 5001`) after running `linear_regression.py` and `sweep.py`, and from this repo's Actions page.
 
-| MLflow UI: sweep runs (nested) | MLflow UI: run artifacts |
+| MLflow UI: sweep parent run (best metrics + 12 child runs) | MLflow UI: child run artifacts (`diagnostics/`) |
 |---|---|
 | ![Sweep runs](docs/screenshots/mlflow_sweep_runs.png) | ![Artifacts](docs/screenshots/mlflow_run_artifacts.png) |
 
-| Model Registry: `@champion` | GitHub Actions run |
+| Model Registry: version 2 with alias `@champion` | GitHub Actions: `tests` workflow runs |
 |---|---|
 | ![Registry](docs/screenshots/mlflow_registry.png) | ![CI](docs/screenshots/github_actions.png) |
 
