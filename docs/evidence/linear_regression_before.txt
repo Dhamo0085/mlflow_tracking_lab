@@ -1,0 +1,39 @@
+# linear_regression.py (before), mlflow 3.17.2, scikit-learn 1.9.1, Python 3.12.14
+
+$ python linear_regression.py 
+Elasticnet model (alpha=0.500000, l2_ratio=0.500000):
+  RMSE: 0.7931640229276851
+  MAE: 0.6271946374319587
+  R2: 0.10862644997792614
+[exit code 0]
+
+$ python linear_regression.py 0.1 0.9
+Elasticnet model (alpha=0.100000, l2_ratio=0.900000):
+  RMSE: 0.735314956888905
+  MAE: 0.566974647785579
+  R2: 0.23390870203034675
+[exit code 0]
+
+$ python linear_regression.py -1 0.5
+    validate_parameter_constraints(
+  File "<venv>/site-packages/sklearn/utils/_param_validation.py", line 98, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'alpha' parameter of ElasticNet must be a float in the range [0.0, inf). Got -1.0 instead.
+[exit code 1]
+
+$ python linear_regression.py 0.5 1.5
+    validate_parameter_constraints(
+  File "<venv>/site-packages/sklearn/utils/_param_validation.py", line 98, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'l1_ratio' parameter of ElasticNet must be a float in the range [0.0, 1.0]. Got 1.5 instead.
+[exit code 1]
+
+$ python linear_regression.py abc
+  File "./linear_regression.py", line 55, in <module>
+    alpha = float(sys.argv[1]) if len(sys.argv) > 1 else 0.5
+            ^^^^^^^^^^^^^^^^^^
+ValueError: could not convert string to float: 'abc'
+[exit code 1]
+
+$ (offline: dataset download fails)
+NameError: name 'data' is not defined

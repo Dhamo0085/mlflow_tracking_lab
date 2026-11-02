@@ -1,0 +1,34 @@
+# linear_regression.py (after), mlflow 3.17.2, scikit-learn 1.9.1, Python 3.12.14
+
+$ python linear_regression.py 
+Elasticnet model (alpha=0.500000, l1_ratio=0.500000):
+  RMSE: 0.7931640229276851
+  MAE: 0.6271946374319587
+  R2: 0.10862644997792614
+[exit code 0]
+
+$ python linear_regression.py 0.1 0.9
+Elasticnet model (alpha=0.100000, l1_ratio=0.900000):
+  RMSE: 0.735314956888905
+  MAE: 0.566974647785579
+  R2: 0.23390870203034675
+[exit code 0]
+
+$ python linear_regression.py -1 0.5
+error: alpha must be a finite number >= 0 (got -1.0)
+[exit code 2]
+
+$ python linear_regression.py 0.5 1.5
+error: l1_ratio must be between 0 and 1 (got 1.5)
+[exit code 2]
+
+$ python linear_regression.py abc
+usage: linear_regression.py [-h] [--data {auto,local,url}]
+                            [--experiment EXPERIMENT] [--no-register]
+                            [alpha] [l1_ratio]
+linear_regression.py: error: argument alpha: invalid float value: 'abc'
+[exit code 2]
+
+$ (offline: dataset download fails)
+error: Unable to load the wine-quality data. Tried local file /nonexistent.csv: [Errno 2] No such file or directory: '/nonexistent.csv'; URL http://127.0.0.1:9/none.csv: <urlopen error [Errno 61] Connection refused>
+[exit code 2]
