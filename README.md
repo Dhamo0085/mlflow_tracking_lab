@@ -1,5 +1,6 @@
 # mlflow_tracking_lab
 
+[![tests](https://github.com/Dhamo0085/mlflow_tracking_lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Dhamo0085/mlflow_tracking_lab/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue)
 ![MLflow](https://img.shields.io/badge/MLflow-3.17.2-0194E2)
 
@@ -106,7 +107,8 @@ git log --oneline
 | `81a6e03` | fix: offline data, input validation, clean errors (M1–M6) |
 | `c086ba3` | feat: baseline metrics, diagnostics, sweep, registry-based predict |
 | `321c239` | test, ci: 52 tests, pinned requirements, GitHub Actions |
-| *(latest)* | docs: this README and captured evidence |
+| `4406e91` | docs: README and captured evidence |
+| *(latest)* | docs: CI badge and CI results after the first green run |
 
 Raw output behind every number here is in [`docs/evidence/`](docs/evidence):
 
@@ -225,7 +227,10 @@ error: l1_ratio must be between 0 and 1 (got 1.5)           [exit code 2]
 
 ## 6. Testing
 
-**Original: 0 tests → Now: 52 test cases** (41 test functions). Locally: **51 passed, 1 skipped** on Python 3.12.14 and on 3.13, in fresh virtualenvs.
+**Original: 0 tests → Now: 52 test cases** (41 test functions).
+
+- **CI (Ubuntu, Python 3.12 and 3.13): 52 passed**, coverage **98%** ([first run](https://github.com/Dhamo0085/mlflow_tracking_lab/actions/runs/41390657607)).
+- **Locally (macOS): 51 passed, 1 skipped** on Python 3.12.14 and on 3.13, in fresh virtualenvs. The skip is explained below.
 
 | File | Cases | Covers |
 |---|---:|---|
@@ -249,7 +254,7 @@ Every test uses its own temporary SQLite tracking store and working folder, so t
 
 The new and changed code (the first three files) is at **97%** (264 of 271 statements). The 7 uncovered lines are the three `sys.exit(main())` entry-point lines, one defensive `except` branch in `predict.read_samples` (2 lines), and two print-only lines (the stdout table in `predict.py` and the registration message in `sweep.py`).
 
-**CI:** [`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs pytest with coverage on Python 3.12 and 3.13, then a real `linear_regression.py` → `sweep.py` → `predict.py` run.
+**CI:** [`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs pytest with coverage on Python 3.12 and 3.13, then a real `linear_regression.py` → `sweep.py` → `predict.py` run. In the [first run](https://github.com/Dhamo0085/mlflow_tracking_lab/actions/runs/41390657607), both versions passed all 52 tests, including `serving.py`, so total coverage there is 98% (332 statements, 8 missed). The smoke run reproduced the same best sweep result (RMSE 0.6742) and predict RMSE (0.5795) as locally.
 
 ---
 
