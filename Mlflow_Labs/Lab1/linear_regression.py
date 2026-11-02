@@ -10,9 +10,11 @@ Usage (the original positional arguments still work):
 """
 
 import argparse
+import json
 import logging
 import math
 import sys
+import tempfile
 import warnings
 from pathlib import Path
 from urllib.parse import urlparse
@@ -24,6 +26,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
 import mlflow
+import mlflow.data
 import mlflow.sklearn
 from mlflow.models import infer_signature
 
@@ -98,6 +101,45 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
+def baseline_metrics(train_y, test_y) -> dict:
+    """Metrics of a model that always predicts the training mean (the bar to beat)."""
+    mean_pred = np.full(len(test_y), float(np.mean(train_y.to_numpy())))
+    rmse, mae, r2 = eval_metrics(test_y, mean_pred)
+    return {"baseline_rmse": float(rmse), "baseline_mae": float(mae), "baseline_r2": float(r2)}
+
+
+def log_diagnostics(model: ElasticNet, test_x: pd.DataFrame, test_y: pd.DataFrame, predicted) -> None:
+    """Log coefficients (JSON) and a predicted-vs-actual plot as run artifacts."""
+    import matplotlib
+
+    matplotlib.use("Agg")  # no display needed (CI, servers)
+    import matplotlib.pyplot as plt
+
+    coefficients = {
+        "intercept": float(np.ravel(model.intercept_)[0]),
+        "coefficients": {name: float(c) for name, c in zip(test_x.columns, np.ravel(model.coef_))},
+    }
+    with tempfile.TemporaryDirectory() as tmp:
+        coef_path = Path(tmp) / "coefficients.json"
+        coef_path.write_text(json.dumps(coefficients, indent=2))
+        mlflow.log_artifact(str(coef_path), artifact_path="diagnostics")
+
+        actual = test_y.to_numpy().ravel()
+        fig, ax = plt.subplots(figsize=(5, 5))
+        ax.scatter(actual, predicted, alpha=0.4)
+        lo, hi = actual.min() - 0.5, actual.max() + 0.5
+        ax.plot([lo, hi], [lo, hi], "--", color="grey", label="perfect prediction")
+        ax.set_xlabel("actual quality")
+        ax.set_ylabel("predicted quality")
+        ax.set_title("ElasticNet: predicted vs actual (test set)")
+        ax.legend()
+        fig.tight_layout()
+        plot_path = Path(tmp) / "pred_vs_actual.png"
+        fig.savefig(plot_path, dpi=100)
+        plt.close(fig)
+        mlflow.log_artifact(str(plot_path), artifact_path="diagnostics")
+
+
 def validate_hyperparams(alpha: float, l1_ratio: float) -> None:
     """Reject values ElasticNet cannot use, with a readable message."""
     if not math.isfinite(alpha) or alpha < 0:
@@ -152,6 +194,15 @@ def train_and_log(alpha: float, l1_ratio: float, data: pd.DataFrame,
         mlflow.log_metric("mae", mae)
         mlflow.set_tags({"model_family": "ElasticNet", "dataset": "winequality-red", **(extra_tags or {})})
 
+        # Added: data lineage, a mean-predictor baseline and diagnostics.
+        mlflow.log_params({"n_train": len(train_x), "n_test": len(test_x), "random_state": RANDOM_SEED})
+        mlflow.log_input(mlflow.data.from_pandas(data, name="winequality-red", targets=TARGET), context="training")
+        baseline = baseline_metrics(train_y, test_y)
+        mlflow.log_metrics(baseline)
+        mlflow.log_metric("rmse_improvement_vs_baseline", baseline["baseline_rmse"] - float(rmse))
+        print(f"  baseline RMSE (predict the mean): {baseline['baseline_rmse']}")
+        log_diagnostics(lr, test_x, test_y, predicted_qualities)
+
         predictions = lr.predict(train_x)
         signature = infer_signature(train_x, predictions)
 
@@ -177,6 +228,7 @@ def train_and_log(alpha: float, l1_ratio: float, data: pd.DataFrame,
         "rmse": float(rmse),
         "mae": float(mae),
         "r2": float(r2),
+        **baseline,
     }
 
 
